@@ -1,14 +1,17 @@
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
-// 2) Carga las variables de .env
-use Dotenv\Dotenv;
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->safeLoad();
+// Si estás en entorno local, intenta cargar el archivo .env
+if (file_exists(__DIR__ . '/.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->safeLoad();
+}
 
-if (!isset($_ENV['DB_HOST'])) {
+// Verifica que las variables del entorno existan (Render las inyecta automáticamente)
+if (!getenv('DB_HOST')) {
     die('Falta una variable de entorno crítica');
 }
+
 
 
 // 4) Luego, carga tus rutas/controladores
