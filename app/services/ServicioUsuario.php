@@ -23,24 +23,6 @@ class ServicioUsuario implements  LoginUsuario {
         $this->repo = $repo;
         $this->encriptador = $encriptador;
         $this->pdo = $pdo;
-        $this->crearRoot();
-    }
-
-    private function crearRoot(): void {
-        if (! $this->repo->existeRoot()) {
-            $pwdHashed = $this->encriptador->hash('Bñ6V6am-0');
-            $usuarioRoot = new Usuario(
-                id:         null,
-                name:       'Leandro',
-                email:      'encomiendasLeandro@gmail.com',
-                password:   $pwdHashed,
-                rol:        'admin',
-                created_at: new DateTime(),
-                last_login: null,
-                archived:   false
-            );
-            $this->repo->guardar($usuarioRoot);
-        }
     }
 
     public function crearPendiente(string $nombre, string $correo, string $passwordPlain): int

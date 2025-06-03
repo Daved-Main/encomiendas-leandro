@@ -26,14 +26,7 @@ class UsuarioRepositoryPg implements UsuarioRepository {
     return (bool) $stmt->fetchColumn();
     }
 
-    //funcion para un usaurio raiz
-    public function existeRoot(): bool
-    {
-        $sql = "SELECT 1 FROM usuario WHERE rol = 'admin' LIMIT 1";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-        return (bool) $stmt->fetchColumn();
-    }
+
 
     //funcion para guardar los usuarios
     public function guardar(Usuario $usuario) : bool {

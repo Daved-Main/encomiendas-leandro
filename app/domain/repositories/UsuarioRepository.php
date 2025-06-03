@@ -19,7 +19,6 @@ use DateTime;
         public function listarInactivos() : array;
         public function actualizar(Usuario $usuario) : bool;
         public function archivar(int $id_user): bool;
-        public function existeRoot(): bool;
         public function actualizarLastLogin(int $id_user, DateTime $fecha): bool;
         public function desarchivar(int $id_user) : bool;
     }
