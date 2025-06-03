@@ -1,4 +1,5 @@
 <?php
+
 namespace app\infrastructure\mail;
 
 use DateTime;
@@ -11,30 +12,34 @@ class EmailJsService
     private string $userId;
     private string $accessToken;
     private string $apiUrl;
+    private bool $isDev;
 
     public function __construct()
     {
-        // LEER desde $_ENV, no getenv()
-        $this->serviceId         = $_ENV['EMAILJS_SERVICE_ID']       ?? '';
-        $this->templateIdWelcome = $_ENV['EMAILJS_TEMPLATE_WELCOME'] ?? '';
-        $this->templateIdVerify  = $_ENV['EMAILJS_TEMPLATE_VERIFY']  ?? '';
-        $this->userId            = $_ENV['EMAILJS_USER_ID']          ?? '';
-        $this->accessToken       = $_ENV['EMAILJS_ACCESS_TOKEN']     ?? '';
-        // Si en .env no existe, usa este valor por defecto
-        $this->apiUrl            = $_ENV['EMAILJS_API_URL']
-                                   ?? 'https://api.emailjs.com/api/v1.0/email/send';
+        // Mejor uso de entorno para producción
+        $this->serviceId         = getenv('EMAILJS_SERVICE_ID')       ?: '';
+        $this->templateIdWelcome = getenv('EMAILJS_TEMPLATE_WELCOME') ?: '';
+        $this->templateIdVerify  = getenv('EMAILJS_TEMPLATE_VERIFY')  ?: '';
+        $this->userId            = getenv('EMAILJS_USER_ID')          ?: '';
+        $this->accessToken       = getenv('EMAILJS_ACCESS_TOKEN')     ?: '';
+        $this->apiUrl            = getenv('EMAILJS_API_URL')          ?: 'https://api.emailjs.com/api/v1.0/email/send';
 
-        // DEBUG temporal: lanza en el log si falta algo
-        if (
-            empty($this->serviceId) ||
-            empty($this->templateIdWelcome) ||
-            empty($this->templateIdVerify) ||
-            empty($this->userId) ||
-            empty($this->accessToken)
-        ) {
-            error_log("[EmailJsService] 🔴 Alguna variable EMAILJS NO está definida");
-        } else {
-            error_log("[EmailJsService] ✅ Variables EMAILJS cargadas correctamente");
+        // Detectar si estamos en local/desarrollo para permitir logs
+        $this->isDev = getenv('APP_ENV') === 'local';
+
+        // Validar variables críticas solo si estamos en desarrollo
+        if ($this->isDev) {
+            if (
+                empty($this->serviceId) ||
+                empty($this->templateIdWelcome) ||
+                empty($this->templateIdVerify) ||
+                empty($this->userId) ||
+                empty($this->accessToken)
+            ) {
+                error_log("[EmailJsService] 🔴 Faltan variables críticas de entorno.");
+            } else {
+                error_log("[EmailJsService] ✅ Variables cargadas correctamente.");
+            }
         }
     }
 
@@ -50,11 +55,17 @@ class EmailJsService
 
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-        error_log("[EmailJsService] HTTP Code: $httpCode");
-        error_log("[EmailJsService] Response: $response");
-
+        $curlError = curl_error($ch);
         curl_close($ch);
+
+        if ($this->isDev) {
+            error_log("[EmailJsService] HTTP Code: $httpCode");
+            error_log("[EmailJsService] Response: $response");
+            if ($curlError) {
+                error_log("[EmailJsService] cURL Error: $curlError");
+            }
+        }
+
         return $httpCode === 200;
     }
 
@@ -69,7 +80,7 @@ class EmailJsService
                 'user_name'    => $userName,
                 'email'        => $email,
                 'company_name' => 'Encomiendas Leandro',
-                'website_link' => 'https://tu-dominio.local',
+                'website_link' => 'https://encomiendasleandro.onrender.com',
             ],
         ];
 

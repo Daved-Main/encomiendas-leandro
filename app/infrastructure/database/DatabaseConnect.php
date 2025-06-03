@@ -13,15 +13,27 @@ class DatabaseConnect
     public static function getInstance(): PDO
     {
         if (self::$instance === null) {
-            $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
-            $dotenv->load();
+            // 🔐 Si estás en local y el archivo .env existe, cargalo
+            $envPath = __DIR__ . '/../../../';
+            if (file_exists($envPath . '.env')) {
+                $dotenv = Dotenv::createImmutable($envPath);
+                $dotenv->safeLoad();
+            }
+
+            // 🔍 Obtené las variables desde el entorno (Render las inyecta así)
+            $host     = getenv('DB_HOST');
+            $port     = getenv('DB_PORT') ?: '5432'; // por si no hay puerto seteado
+            $database = getenv('DB_DATABASE');
+            $username = getenv('DB_USERNAME');
+            $password = getenv('DB_PASSWORD');
 
             $dsn = sprintf(
                 'pgsql:host=%s;port=%s;dbname=%s',
-                $_ENV['DB_HOST'],
-                $_ENV['DB_PORT'],
-                $_ENV['DB_DATABASE']
+                $host,
+                $port,
+                $database
             );
+
             $opts = [
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -29,14 +41,9 @@ class DatabaseConnect
             ];
 
             try {
-                self::$instance = new PDO(
-                    $dsn,
-                    $_ENV['DB_USERNAME'],
-                    $_ENV['DB_PASSWORD'],
-                    $opts
-                );
+                self::$instance = new PDO($dsn, $username, $password, $opts);
             } catch (PDOException $e) {
-                die("Error de conexión: " . $e->getMessage());
+                die("❌ Error de conexión: " . $e->getMessage());
             }
         }
 
