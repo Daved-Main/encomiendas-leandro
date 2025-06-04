@@ -326,6 +326,13 @@
             $reportCtrl->exportEmpleadosAniversariosPdf();
         }
         break;
+    case 'seguimientoPaquete' :
+        if (empty($_SESSION['user'])) {
+            header('Location: index.php?route=login');
+            exit;
+    }
+        require_once __DIR__ . '/../app/presentation/views/seguimientoPaquete.php';
+        break;
         default:
             echo "Ruta no encontrada";
         //case '' :
