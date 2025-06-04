@@ -17,6 +17,7 @@ $showSuccessModal = isset($_GET['success']) && $_GET['success'] == '1';
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Restablecer Contraseña</title>
+  <link rel="stylesheet" href="/app/presentation/views/iu/style.css">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body class="flex items-center justify-center h-screen bg-gradient-to-r from-cyan-400 to-blue-500">

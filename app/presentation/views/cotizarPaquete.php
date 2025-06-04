@@ -203,7 +203,7 @@
     </div>
   </div>
 
-  <script src="/encomiedasLeandro/app/presentation/views/iu/cotizar.js" defer></script>
+  <script src="/app/presentation/views/iu/cotizar.js" defer></script>
 
 </body>
 </html>

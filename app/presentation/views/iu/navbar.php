@@ -234,4 +234,4 @@ $nombreAdmin    = $isAdmin    ? $_SESSION['user'] : '';
 </nav>
 
 <!-- Incluir siempre nav.js al final -->
-<script src="/encomiedasLeandro/app/presentation/views/iu/nav.js" defer></script>
+<script src="/app/presentation/views/iu/nav.js" defer></script>

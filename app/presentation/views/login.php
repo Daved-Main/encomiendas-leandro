@@ -10,7 +10,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión</title>
-        <link rel="stylesheet" href="/encomiedasLeandro/app/presentation/views/iu/style.css">
+        <link rel="stylesheet" href="/app/presentation/views/iu/style.css">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body class="flex items-center justify-center h-screen bg-gradient-to-r from-cyan-400 to-blue-500">

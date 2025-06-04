@@ -17,7 +17,7 @@ unset($_SESSION['errors'], $_SESSION['success']);
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Recuperar Contraseña</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <link rel="stylesheet" href="/encomiedasLeandro/app/presentation/views/iu/style.css">
+  <link rel="stylesheet" href="/app/presentation/views/iu/style.css">
 </head>
 <body class="relative flex items-center justify-center h-screen bg-gradient-to-r from-cyan-400 to-blue-500">
   <!-- Contenedor padre (relativo) para posicionar la X -->

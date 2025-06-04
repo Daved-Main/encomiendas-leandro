@@ -12,7 +12,7 @@ unset($_SESSION['errors']);
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login Empleado — Encomiendas Leandro</title>
   <!-- Mismo CSS y Tailwind que tu login‐usuario -->
-  <link rel="stylesheet" href="/encomiedasLeandro/app/presentation/views/iu/style.css">
+  <link rel="stylesheet" href="/app/presentation/views/iu/style.css">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body class="flex items-center justify-center h-screen bg-gradient-to-r from-cyan-400 to-blue-500">

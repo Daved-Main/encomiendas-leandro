@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="/encomiedasLeandro/app/presentation/views/iu/style.css">
+    <link rel="stylesheet" href="/app/presentation/views/iu/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -17,7 +17,7 @@
 
 <div class="">
     <div class="flex flex-col md:flex-row items-center gap-4 place-self-start bg-white p-4 md:p-0">
-    <img class="mask-radial-[100%_100%] mask-radial-from-50% mask-radial-at-left h-120 w-full md:w-auto object-cover" src="/encomiedasLeandro/app/presentation/views/iu/avion.jpg" alt="se encontro la imagen"/>
+    <img class="mask-radial-[100%_100%] mask-radial-from-50% mask-radial-at-left h-120 w-full md:w-auto object-cover" src="/app/presentation/views/iu/avion.jpg" alt="se encontro la imagen"/>
 
     <div class="font-large w-full md:w-auto">
       <p class="text-xl text-black font-bold uppercase text-center md:text-left" id="part-1">

@@ -20,7 +20,7 @@ unset($_SESSION['errors']);
   <title>Editar Empleado — Encomiendas Leandro</title>
   <!-- TailwindCSS en modo browser -->
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <link rel="stylesheet" href="/encomiedasLeandro/app/presentation/views/iu/style.css">
+  <link rel="stylesheet" href="/app/presentation/views/iu/style.css">
 </head>
 <body class="flex items-center justify-center h-screen bg-gradient-to-r from-cyan-400 to-blue-500">
 
