@@ -44,10 +44,6 @@ $nombreAdmin    = $isAdmin    ? $_SESSION['user'] : '';
            class="px-3 py-2 rounded-md hover:bg-blue-600 transition">
           Inicio
         </a>
-        <a href="index.php?route=servicios"
-           class="px-3 py-2 rounded-md hover:bg-blue-600 transition">
-          Servicios
-        </a>
         <a href="index.php?route=agendaPaquete"
            class="px-3 py-2 rounded-md hover:bg-blue-600 transition">
           Enviar Paquete
@@ -191,7 +187,6 @@ $nombreAdmin    = $isAdmin    ? $_SESSION['user'] : '';
   <!-- ========================= -->
   <div id="mobile-menu" class="xl:hidden bg-blue-600 text-white px-4 pb-4 space-y-1 hidden">
     <a href="index.php?route=home" class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Inicio</a>
-    <a href="index.php?route=servicios" class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Servicios</a>
     <a href="index.php?route=agendaPaquete" class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Enviar Paquete</a>
     <a href="index.php?route=proximosViajes" class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Próximos Viajes</a>
     <a href="index.php?route=seguimientoPaquete" class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Seguimiento</a>
