@@ -1,9 +1,8 @@
 <?php
-// app/presentation/views/proximos-viajes.php
+// Archivo: app/presentation/views/proximos-viajes.php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-// $viajesProximos viene desde el controller → listarViajesParaUsuario()
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -18,23 +17,15 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <?php include __DIR__ . '/iu/navbar.php';?>
 
-
   <div class="max-w-4xl mx-auto mt-12 px-4">
+    <h1 class="text-3xl font-bold mb-6 text-center">Consulta nuestros próximos viajes</h1>
 
-    <!-- Título general -->
-    <h1 class="text-3xl font-bold mb-6 text-center">
-      Consulta nuestros próximos viajes
-    </h1>
-
-    <!-- Rango de fechas programadas -->
-    <?php if (!empty($viajesProximos)): 
-        $fechasSalida = array_column($viajesProximos, 'fecha_salida_proximo');
-        $fechasEntrega = array_column($viajesProximos, 'fecha_entrega_proximo');
+    <?php if (!empty($viajesProximos)):
+        $fechasSalida = array_column($viajesProximos, 'fecha_salida_actual');
+        $fechasEntrega = array_column($viajesProximos, 'fecha_entrega_actual');
         $primeraSalida = date('d/m/Y', strtotime(min($fechasSalida)));
         $fechasEntregaFiltradas = array_filter($fechasEntrega, fn($f) => !is_null($f));
-        $ultimaEntrega = !empty($fechasEntregaFiltradas)
-                        ? date('d/m/Y', strtotime(max($fechasEntregaFiltradas)))
-                        : null;
+        $ultimaEntrega = !empty($fechasEntregaFiltradas) ? date('d/m/Y', strtotime(max($fechasEntregaFiltradas))) : null;
     ?>
       <p class="text-lg mb-4 text-center">
         Viajes programados:
@@ -46,7 +37,6 @@ if (session_status() === PHP_SESSION_NONE) {
       </p>
     <?php endif; ?>
 
-    <!-- Tabla de todos los “Viajes Programados” -->
     <div class="overflow-x-auto mb-8">
       <table class="min-w-full bg-white rounded-lg shadow-md">
         <thead class="bg-blue-600 text-white">
@@ -60,27 +50,16 @@ if (session_status() === PHP_SESSION_NONE) {
         <tbody>
           <?php if (empty($viajesProximos)): ?>
             <tr>
-              <td colspan="4" class="px-4 py-3 text-center text-gray-500">
-                No hay viajes programados en este momento.
-              </td>
+              <td colspan="4" class="px-4 py-3 text-center text-gray-500">No hay viajes programados en este momento.</td>
             </tr>
           <?php else: ?>
             <?php foreach ($viajesProximos as $viaje): ?>
               <tr class="border-b hover:bg-gray-50">
+                <td class="px-4 py-2"> <?= htmlspecialchars($viaje['lugar_salida_actual']) ?> </td>
+                <td class="px-4 py-2"> <?= htmlspecialchars($viaje['lugar_destino_actual']) ?> </td>
+                <td class="px-4 py-2"> <?= date('d/m/Y H:i', strtotime($viaje['fecha_salida_actual'])) ?> </td>
                 <td class="px-4 py-2">
-                  <?= htmlspecialchars($viaje['lugar_salida_proximo']) ?>
-                </td>
-                <td class="px-4 py-2">
-                  <?= htmlspecialchars($viaje['lugar_destino_proximo']) ?>
-                </td>
-                <td class="px-4 py-2">
-                  <?= date('d/m/Y H:i', strtotime($viaje['fecha_salida_proximo'])) ?>
-                </td>
-                <td class="px-4 py-2">
-                  <?= $viaje['fecha_entrega_proximo']
-                        ? date('d/m/Y H:i', strtotime($viaje['fecha_entrega_proximo']))
-                        : '-' 
-                  ?>
+                  <?= $viaje['fecha_entrega_actual'] ? date('d/m/Y H:i', strtotime($viaje['fecha_entrega_actual'])) : '-' ?>
                 </td>
               </tr>
             <?php endforeach; ?>
@@ -89,43 +68,34 @@ if (session_status() === PHP_SESSION_NONE) {
       </table>
     </div>
 
-    <!-- Destacado: “Próximo viaje” (el que tenga la fecha_salida más cercana) -->
     <?php 
     if (!empty($viajesProximos)) {
-        usort($viajesProximos, function($a, $b) {
-            return strtotime($a['fecha_salida_proximo']) <=> strtotime($b['fecha_salida_proximo']);
-        });
+        usort($viajesProximos, fn($a, $b) => strtotime($a['fecha_salida_actual']) <=> strtotime($b['fecha_salida_actual']));
         $proximo = $viajesProximos[0];
     ?>
       <div class="bg-blue-500 text-white rounded-lg shadow-md p-6">
         <h2 class="text-xl font-semibold mb-4">
-          Próximo viaje: <?= date('d/m/Y', strtotime($proximo['fecha_salida_proximo'])) ?>
+          Próximo viaje: <?= date('d/m/Y', strtotime($proximo['fecha_salida_actual'])) ?>
         </h2>
         <p class="mb-1">
           <span class="font-medium">Salida:</span>
-          <?= htmlspecialchars($proximo['lugar_salida_proximo']) ?>
-          – 
+          <?= htmlspecialchars($proximo['lugar_salida_actual']) ?> – 
           <span class="font-medium">Destino:</span>
-          <?= htmlspecialchars($proximo['lugar_destino_proximo']) ?>
+          <?= htmlspecialchars($proximo['lugar_destino_actual']) ?>
         </p>
         <p class="mb-1">
           <span class="font-medium">Hora de recogida:</span>
-          <?= date('H:i', strtotime($proximo['fecha_salida_proximo'])) ?>
+          <?= date('H:i', strtotime($proximo['fecha_salida_actual'])) ?>
         </p>
         <p>
           <span class="font-medium">Hora estimada de entrega:</span>
-          <?= $proximo['fecha_entrega_proximo']
-                ? date('d/m/Y H:i', strtotime($proximo['fecha_entrega_proximo']))
-                : '-' 
-          ?>
+          <?= $proximo['fecha_entrega_actual'] ? date('d/m/Y H:i', strtotime($proximo['fecha_entrega_actual'])) : '-' ?>
         </p>
       </div>
     <?php } ?>
 
-    <!-- Botón “¡Comienza ahora!” -->
     <div class="text-center mt-6">
-      <a href="index.php?route=home"
-         class="inline-block bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg transition">
+      <a href="index.php?route=home" class="inline-block bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg transition">
         ¡Comienza ahora!
       </a>
     </div>

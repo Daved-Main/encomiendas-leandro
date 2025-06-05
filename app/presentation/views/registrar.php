@@ -92,7 +92,7 @@ if (session_status() === PHP_SESSION_NONE) {
       </div>
     </div>
   </div>
-  <script src="/encomiedasLeandro/app/presentation/views/iu/registrar.js" defer></script>
+  <script src="app/presentation/views/iu/registrar.js" defer></script>
   <?php unset($_SESSION['errors']); endif; ?>
 
 </body>

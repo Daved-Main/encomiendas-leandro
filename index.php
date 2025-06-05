@@ -13,6 +13,5 @@ if (!getenv('DB_HOST')) {
 }
 
 
-
 // 4) Luego, carga tus rutas/controladores
 require __DIR__ . '/config/route.php';

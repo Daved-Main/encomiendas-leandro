@@ -1,4 +1,5 @@
 <?php
+// app/infrastructure/Database.php
 
 namespace app\infrastructure\database;
 

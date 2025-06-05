@@ -73,33 +73,33 @@
         <h1 id="part-3" class="text-2xl font-bold mb-6">¿Listo para enviar tu próxima encomienda?</h1>
 
         <!-- Si existe un viaje cargado, mostramos la tarjeta azul -->
-        <?php if (!is_null($proximo)): ?>
-            <div class="bg-[#007BFF] text-white rounded-lg mx-auto p-6 mb-8" style="max-width: 600px;">
-                <h2 class="text-xl font-semibold mb-3">
-                    Próximo viaje: <?= date('d/m/Y', strtotime($proximo['fecha_salida_proximo'])) ?>
-                </h2>
-                <p class="mb-1">
-                    <span class="font-medium">Salida:</span>
-                    <?= htmlspecialchars($proximo['lugar_salida_proximo']) ?>
-                    —
-                    <span class="font-medium">Destino:</span>
-                    <?= htmlspecialchars($proximo['lugar_destino_proximo']) ?>
-                </p>
-                <p class="mb-1">
-                    <span class="font-medium">Hora de recogida:</span>
-                    <?= date('H:i', strtotime($proximo['fecha_salida_proximo'])) ?>
-                </p>
-                <p>
-                    <span class="font-medium">Hora estimada de entrega:</span>
-                    <?= $proximo['fecha_entrega_proximo']
-                          ? date('d/m/Y H:i', strtotime($proximo['fecha_entrega_proximo']))
-                          : '-' ?>
-                </p>
-            </div>
-        <?php else: ?>
-            <!-- Si no hay viajes programados -->
-            <p class="text-gray-600 mb-6">No hay viajes programados en este momento.</p>
-        <?php endif; ?>
+<?php if (!is_null($proximo)): ?>
+    <div class="bg-[#007BFF] text-white rounded-lg mx-auto p-6 mb-8" style="max-width: 600px;">
+        <h2 class="text-xl font-semibold mb-3">
+            Próximo viaje: <?= date('d/m/Y', strtotime($proximo['fecha_salida_actual'])) ?>
+        </h2>
+        <p class="mb-1">
+            <span class="font-medium">Salida:</span>
+            <?= htmlspecialchars($proximo['lugar_salida_actual']) ?>
+            —
+            <span class="font-medium">Destino:</span>
+            <?= htmlspecialchars($proximo['lugar_destino_actual']) ?>
+        </p>
+        <p class="mb-1">
+            <span class="font-medium">Hora de recogida:</span>
+            <?= date('H:i', strtotime($proximo['fecha_salida_actual'])) ?>
+        </p>
+        <p>
+            <span class="font-medium">Hora estimada de entrega:</span>
+            <?= $proximo['fecha_entrega_actual']
+                  ? date('d/m/Y H:i', strtotime($proximo['fecha_entrega_actual']))
+                  : '-' ?>
+        </p>
+    </div>
+<?php else: ?>
+    <p class="text-gray-600 mb-6">No hay viajes programados en este momento.</p>
+<?php endif; ?>
+
 
         <!-- Botón verde de “¡Comienza ahora!” -->
     <a href="index.php?route=agendaPaquete"><button type="submit" value="¡Comienza ahora!" class="bg-[#009966] p-2 px-3 mb-10 rounded-md text-white font-semibold transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-105 hover:bg-green-800 cursor-pointer">¡Comienza ahora!</button></a>

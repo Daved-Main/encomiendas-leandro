@@ -13,14 +13,14 @@ unset($_SESSION['errors'], $_SESSION['success']);
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Agendar Próximo Viaje — Encomiendas Leandro</title>
+  <title>Agendar Viaje Actual — Encomiendas Leandro</title>
   <link rel="stylesheet" href="/app/presentation/views/iu/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-800">
 
   <div class="max-w-lg mx-auto mt-12 bg-white p-8 rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold mb-6 text-center">Agendar un nuevo “Viaje Próximo”</h2>
+    <h2 class="text-2xl font-bold mb-6 text-center">Agendar un nuevo "Viaje Actual"</h2>
 
     <?php if (!empty($success)): ?>
       <div class="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
@@ -85,18 +85,42 @@ unset($_SESSION['errors'], $_SESSION['success']);
         />
       </div>
 
+      <div>
+        <label for="capacidad_paquetes" class="block text-gray-600 mb-1">Capacidad de paquetes</label>
+        <input
+          type="number"
+          name="capacidad_paquetes"
+          id="capacidad_paquetes"
+          min="1" max="40"
+          required
+          class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+        />
+      </div>
+
+      <div>
+        <label for="id_viaje_mes" class="block text-gray-600 mb-1">Número de viaje del mes</label>
+        <input
+          type="number"
+          name="id_viaje_mes"
+          id="id_viaje_mes"
+          min="1"
+          required
+          class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+          placeholder="Ej: 1, 2, 3..."
+        />
+      </div>
+
       <div class="text-center">
         <button
           type="submit"
-          class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition"
-        >
+          class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition">
           Guardar viaje
         </button>
       </div>
 
       <div class="text-center">
         <a href="index.php?route=admin/listarViajeProximo" class="text-blue-600 hover:underline">
-          Volver al listado de viajes próximos
+          Volver al listado de viajes
         </a>
       </div>
 

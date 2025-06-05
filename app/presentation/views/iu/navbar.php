@@ -19,9 +19,7 @@ $nombreAdmin    = $isAdmin    ? $_SESSION['user'] : '';
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex flex-wrap justify-between items-center h-16">
 
-      <!-- ================= -->
-      <!--   LOGO / MARCA   -->
-      <!-- ================= -->
+
       <div class="flex-shrink-0">
         <a href="index.php?route=home" class="flex items-center space-x-2 hover:text-gray-200">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none"
@@ -35,10 +33,7 @@ $nombreAdmin    = $isAdmin    ? $_SESSION['user'] : '';
         </a>
       </div>
 
-      <!-- ===================== -->
-      <!--  MENÚ DE ESCRITORIO   -->
-      <!--  (solo en pantallas ≥1280px = xl) -->
-      <!-- ===================== -->
+
       <div class="hidden xl:flex xl:space-x-6">
         <a href="index.php?route=home"
            class="px-3 py-2 rounded-md hover:bg-blue-600 transition">
@@ -58,10 +53,7 @@ $nombreAdmin    = $isAdmin    ? $_SESSION['user'] : '';
         </a>
       </div>
 
-      <!-- ====================================== -->
-      <!--  ACCIONES USUARIO / ADMIN / EMPLEADO   -->
-      <!--  (solo en pantallas ≥1280px = xl)      -->
-      <!-- ====================================== -->
+
       <div class="hidden xl:flex xl:items-center xl:space-x-4">
         <?php if (! $isLoggedIn): ?>
           <!-- Nadie logueado: Iniciar Sesión / Registrarse -->
@@ -90,7 +82,7 @@ $nombreAdmin    = $isAdmin    ? $_SESSION['user'] : '';
             </button>
             <ul id="admin-menu" class="absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg hidden">
               <!-- Opciones de Admin -->
-              <li><a href="index.php?route=paquetesRecibidos" class="block px-4 py-2 hover:bg-gray-100">Paquetes Recibidos</a></li>
+              <li><a href="index.php?route=listar_paquetes" class="block px-4 py-2 hover:bg-gray-100">Paquetes Recibidos</a></li>
               <li><a href="index.php?route=estadoPaquetes"      class="block px-4 py-2 hover:bg-gray-100">Estado de Paquetes</a></li>
               <li><a href="index.php?route=generarCobros"       class="block px-4 py-2 hover:bg-gray-100">Generar Cobros</a></li>
               <li><a href="index.php?route=pagosRecibidos"      class="block px-4 py-2 hover:bg-gray-100">Pagos Recibidos</a></li>
@@ -197,7 +189,7 @@ $nombreAdmin    = $isAdmin    ? $_SESSION['user'] : '';
       <a href="index.php?route=registrar" class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Registrarse</a>
 
     <?php elseif ($isAdmin): ?>
-      <a href="index.php?route=paquetesRecibidos" class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Paquetes Recibidos</a>
+      <a href="index.php?route=listar_paquetes" class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Paquetes Recibidos</a>
       <a href="index.php?route=estadoPaquetes"      class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Estado de Paquetes</a>
       <a href="index.php?route=generarCobros"       class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Generar Cobros</a>
       <a href="index.php?route=pagosRecibidos"      class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Pagos Recibidos</a>
@@ -228,5 +220,48 @@ $nombreAdmin    = $isAdmin    ? $_SESSION['user'] : '';
   </div>
 </nav>
 
+<script>
+// app/presentation/views/iu/nav.js
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Toggle del menú móvil (hamburguesa)
+  const btn       = document.getElementById('btn-mobile-menu');
+  const menu      = document.getElementById('mobile-menu');
+  const iconMenu  = document.getElementById('icon-menu');
+  const iconClose = document.getElementById('icon-close');
+
+  if (btn && menu && iconMenu && iconClose) {
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+      iconMenu.classList.toggle('hidden');
+      iconClose.classList.toggle('hidden');
+    });
+  }
+
+  // Toggle submenu Admin
+  const adminBtn  = document.getElementById('admin-menu-button');
+  const adminMenu = document.getElementById('admin-menu');
+  adminBtn?.addEventListener('click', () => {
+    if (adminMenu) adminMenu.classList.toggle('hidden');
+  });
+
+  // Toggle submenu Empleado
+  const empBtn  = document.getElementById('empleado-menu-button');
+  const empMenu = document.getElementById('empleado-menu');
+  empBtn?.addEventListener('click', () => {
+    if (empMenu) empMenu.classList.toggle('hidden');
+  });
+
+  // Toggle submenu Usuario
+  const userBtn  = document.getElementById('user-menu-button');
+  const userMenu = document.getElementById('user-menu');
+  userBtn?.addEventListener('click', () => {
+    if (userMenu) userMenu.classList.toggle('hidden');
+  });
+});
+
+
+</script>
+
 <!-- Incluir siempre nav.js al final -->
-<script src="/app/presentation/views/iu/nav.js" defer></script>
+<script src="app/presentation/views/iu/nav.js" defer></script>

@@ -19,6 +19,7 @@
     use app\presentation\controllers\ViajeProximoController;
     use app\infrastructure\database\ViajeProximoRepositoryPg;
     use app\presentation\controllers\ReportController;
+    use app\presentation\controllers\PaqueteController; // NUEVO
 
 // Base de datos y cuestiones
     $pdo = DatabaseConnect::getInstance();
@@ -44,7 +45,7 @@
     $viajeRepo = new ViajeProximoRepositoryPg($pdo);
     $viajeCtrl = new ViajeProximoController($viajeRepo);
     $reportCtrl = new ReportController();
-
+    $paquete = new PaqueteController(); // NUEVO
 
     // Ruta y método HTTP actuales
     $route = $_GET['route'] ?? 'home';
@@ -118,7 +119,7 @@
                 header('Location: index.php?route=login');
                 exit;
             }
-            require_once __DIR__ . '/../app/presentation/views/agendaPaquete.php';
+            $paquete->mostrarFormulario();
             break;
         
         case 'cotizaEnvio' :
@@ -333,6 +334,26 @@
     }
         require_once __DIR__ . '/../app/presentation/views/seguimientoPaquete.php';
         break;
+
+    // NUEVO: Guardar paquete
+    case 'paquete_registrar':
+        $paquete->registrar();
+        break;
+    
+    // Ruta para listar paquetes
+    case 'listar_paquetes':
+        $paquete->listar();
+        break;
+
+    // Rutas para actualizar estado de paquetes
+    case 'actualizar_estado':
+        $paquete->actualizarEstado();
+        break;
+    case 'actualizar_estado_masivo':
+        $paquete->actualizarEstadoMasivo();
+        break;
+
+
         default:
             echo "Ruta no encontrada";
         //case '' :
