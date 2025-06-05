@@ -64,4 +64,7 @@
 </div>
 </body>
 
+ <?php include __DIR__ . '/iu/footer.php'; ?>
+
+
 </html>
