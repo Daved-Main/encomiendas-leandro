@@ -15,18 +15,21 @@ class ListarPaquetes extends BaseCase
         $this->repository = $repository;
     }
 
-    public function execute(): ListarPaquetes
+    public function execute(): BaseCase
     {
-        // Usamos directamente el método que no requiere parámetros
         $paquetes = $this->repository->listarTodos();
 
-        $this->setData($paquetes);
+        // Validar y asegurarse que se asignen datos
+        if (!is_array($paquetes)) {
+            throw new \RuntimeException("La lista de paquetes no es un array válido.");
+        }
 
+        $this->setData($paquetes);
         return $this;
     }
 
     protected function transform(): array
     {
-        return $this->getAttributes(); // Podés aplicar filtros si después lo necesitás
+        return $this->getAttributes();
     }
 }

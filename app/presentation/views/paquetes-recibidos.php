@@ -15,71 +15,80 @@
 <?php include __DIR__ . '/iu/navbar.php';?>
 
  
-  <div class="flex">
-    <div class="flex-1 p-20">
-        <h2 class="text-4xl font-bold text-left mb-10 mt-20">Lista de Paquetes Recibidos</h2>
-        <div class="grid grid-cols-2">
-          <div class="justify-start">
-            <label class="text-sm">Filtrar por fecha</label><br>
-            <input type="date" class="border-2 border-gray-300 rounded-lg px-5 text-gray-500/80">
-            <input type="submit" value="Filtrar" class="bg-[#0068CC] text-white px-2 py-1 rounded-lg ml-4 cursor-pointer">
-          </div>
-          <div class="justify-end place-self-end">
-            <input type="submit" value="Imprimir Viñetas" class="bg-[#009966] text-white px-2 py-1 rounded-lg cursor-pointer">
-          </div>
-        </div>
-        <div class="bg-[#D9D9D9] w-800 border-2 border-gray-400/60 rounded-lg mt-20">
-        <table class="table-auto w-full text-center">
-          <thead class="border-collapse border-b-2 border-gray-400/60">
-            <tr>
-              <th>Código</th>
-              <th>Remitente</th>
-              <th>Destinatario</th>
-              <th>Tipo</th>
-              <th>Contenido</th>
-              <th>Bultos</th>
-              <th class="border-collapse border-l-2 border-gray-400/60">Estado</th>
-              <th class="border-collapse border-l-2 border-gray-400/60">Acciones</th>
-            </tr>
-          </thead>
+  <div class="pt-20 max-w-7xl mx-auto px-4">
+  <h2 class="text-3xl font-bold mb-6 flex items-center gap-2">📦 Lista de Paquetes Recibidos</h2>
 
-          <!-- Coloca aquí la misma estructura HTML que ya tienes,
-          y reemplaza solo el tbody de la tabla: -->
-<tbody>
-<?php foreach ($paquetes as $paquete): ?>
-  <tr>
-    <td><?= $paquete->getCodigoRastreo() ?></td>
-    <td><?= $paquete->getNombreRemitente() ?></td>
-    <td><?= $paquete->getNombreDestinatario() ?></td>
-    <td><?= $paquete->getTipoPaquete() ?></td>
-    <td><?= $paquete->getNombreDelArticulo() ?></td>
-    <td><?= $paquete->getCantidadBultos() ?></td>
-
-    <!-- Columna de estado y actualización -->
-    <td class="border-collapse border-l-2 border-gray-400/60 w-60">
-      <form method="POST" action="index.php?route=actualizar_estado" class="flex gap-2 items-center">
-        <input type="hidden" name="id_paquete" value="<?= $paquete->getId() ?>">
-        <select name="estado" class="border rounded px-2 py-1">
-          <?php
-            $estados = ['Recibido', 'En camino', 'Entregado', 'Retenido'];
-            foreach ($estados as $estado) {
-              $selected = $paquete->getEstado() === $estado ? 'selected' : '';
-              echo "<option value=\"$estado\" $selected>$estado</option>";
-            }
-          ?>
-        </select>
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold px-3 py-1 rounded">
-          Actualizar
-        </button>
-      </form>
-    </td>
-    <td class="border-collapse border-l-2 border-gray-400/60"><button class="bg-[#0068CC] text-white rounded-lg cursor-pointer px-1 m-2">Viñeta</button></td>
-  </tr>
-<?php endforeach; ?>
-</tbody>
+  <!-- Filtros y exportación -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    
+    <form method="GET" action="index.php">
+      <input type="hidden" name="route" value="listar_paquetes">
+      <label class="text-sm font-medium text-gray-600">Filtrar por fecha</label><br>
+      <input type="date" name="fecha" value="<?= $_GET['fecha'] ?? '' ?>" class="border border-gray-300 rounded-md px-4 py-2 text-sm">
+      <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md ml-2 text-sm">
+        Filtrar
+      </button>
+    </form>
 
 
-        </table>
-        </div>
-    </div>
+      <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm">
+        🖨️ Imprimir Viñetas
+      </button>
+    
   </div>
+
+  <!-- Tabla de paquetes -->
+  <div class="bg-white shadow-md rounded-lg overflow-x-auto">
+    <table class="min-w-full text-sm text-left">
+      <thead class="bg-gray-100 border-b border-gray-300">
+        <tr>
+          <th class="px-4 py-3 font-semibold">Código</th>
+          <th class="px-4 py-3 font-semibold">Remitente</th>
+          <th class="px-4 py-3 font-semibold">Destinatario</th>
+          <th class="px-4 py-3 font-semibold">Tipo</th>
+          <th class="px-4 py-3 font-semibold">Contenido</th>
+          <th class="px-4 py-3 font-semibold">Bultos</th>
+          <th class="px-4 py-3 font-semibold">Estado</th>
+          <th class="px-4 py-3 font-semibold text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <?php foreach ($paquetes as $paquete): ?>
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-2"><?= $paquete->getCodigoRastreo() ?></td>
+            <td class="px-4 py-2"><?= $paquete->getNombreRemitente() ?></td>
+            <td class="px-4 py-2"><?= $paquete->getNombreDestinatario() ?></td>
+            <td class="px-4 py-2"><?= $paquete->getTipoPaquete() ?></td>
+            <td class="px-4 py-2"><?= $paquete->getNombreDelArticulo() ?></td>
+            <td class="px-4 py-2"><?= $paquete->getCantidadBultos() ?></td>
+            <td class="px-4 py-2">
+              <form method="POST" action="index.php?route=actualizar_estado" class="flex items-center gap-2">
+                <input type="hidden" name="id_paquete" value="<?= $paquete->getId() ?>">
+                <select name="estado" class="border rounded px-2 py-1 text-sm">
+                  <?php
+                    $estados = ['Recibido', 'En camino', 'Entregado', 'Retenido'];
+                    foreach ($estados as $estado) {
+                      $selected = $paquete->getEstado() === $estado ? 'selected' : '';
+                      echo "<option value=\"$estado\" $selected>$estado</option>";
+                    }
+                  ?>
+                </select>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                  Actualizar
+                </button>
+              </form>
+            </td>
+            <td class="px-4 py-2 text-center">
+              <form method="POST" action="index.php?route=generar_vineta" target="_blank">
+                <input type="hidden" name="codigo_rastreo" value="<?= $paquete->getCodigoRastreo() ?>">
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded text-sm">
+                  Viñeta
+                </button>
+              </form>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
+</div>

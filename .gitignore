@@ -1,5 +1,4 @@
 # PHP
-vendor/
 .env
 .env.*
 *.log

@@ -19,12 +19,12 @@ class PaqueteRepositoryPgsql implements PaqueteRepository
             id_viaje_actual, tipo_paquete, nombre_remitente, telefono_remitente,
             nombre_destinatario, telefono_destinatario, ciudad_destino,
             direccion_destino, nombre_del_articulo, cantidad_bultos,
-            peso, alto, ancho, contenido_fragil, codigo_rastreo, fecha_registro, estado
+            peso, alto, ancho, contenido_fragil, codigo_rastreo, fecha_registro, estado, id_user
         ) VALUES (
             :id_viaje_actual, :tipo_paquete, :nombre_remitente, :telefono_remitente,
             :nombre_destinatario, :telefono_destinatario, :ciudad_destino,
             :direccion_destino, :nombre_del_articulo, :cantidad_bultos,
-            :peso, :alto, :ancho, :contenido_fragil, :codigo_rastreo, :fecha_registro, :estado
+            :peso, :alto, :ancho, :contenido_fragil, :codigo_rastreo, :fecha_registro, :estado, :id_user
         )";
 
         $stmt = $this->conexion->prepare($sql);
@@ -46,7 +46,8 @@ class PaqueteRepositoryPgsql implements PaqueteRepository
             ':contenido_fragil' => $paquete->getContenidoFragil(),
             ':codigo_rastreo' => $paquete->getCodigoRastreo(),
             ':fecha_registro' => $paquete->getFechaRegistro()->format('Y-m-d H:i:s'),
-            ':estado' => $paquete->getEstado()
+            ':estado' => $paquete->getEstado(),
+            ':id_user' => $paquete->getIdUser()
         ]);
 
         if (!$success) {
@@ -123,24 +124,22 @@ class PaqueteRepositoryPgsql implements PaqueteRepository
     }
 
 
-                        public function obtenerIdViajeActualPorNumeroLogico(int $idViajeMes): ?int
-                        {
-                            $sql = "SELECT id_viaje_actual 
-                                    FROM viajeactual 
-                                    WHERE id_viaje_mes = :mes 
-                                    ORDER BY id_viaje_actual DESC 
-                                    LIMIT 1";
-
-                            $stmt = $this->conexion->prepare($sql);
-                            $stmt->execute([':mes' => $idViajeMes]);
-                            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-
-                            return $result ? (int)$result['id_viaje_actual'] : null;
-                        }
+    public function obtenerIdViajeActualPorNumeroLogico(int $idViajeMes): ?int
+    {
+        $sql = "SELECT id_viaje_actual 
+                FROM viajeactual 
+                WHERE id_viaje_mes = :mes 
+                ORDER BY id_viaje_actual DESC 
+                LIMIT 1";
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->execute([':mes' => $idViajeMes]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result ? (int)$result['id_viaje_actual'] : null;
+    }
 
 
 
-    private function hidratarPaquete(array $fila): Paquete
+    public function hidratarPaquete(array $fila): Paquete
     {
         return new Paquete(
             id: $fila['id_paquete'],
@@ -160,7 +159,8 @@ class PaqueteRepositoryPgsql implements PaqueteRepository
             contenidoFragil: $fila['contenido_fragil'],
             codigoRastreo: $fila['codigo_rastreo'],
             estado: $fila['estado'],
-            fechaRegistro: new \DateTime($fila['fecha_registro'])
+            fechaRegistro: new \DateTime($fila['fecha_registro']),
+            idUser: isset($fila['id_user']) ? (int)$fila['id_user'] : 0
         );
     }
 

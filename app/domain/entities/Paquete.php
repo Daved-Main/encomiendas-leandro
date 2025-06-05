@@ -25,6 +25,7 @@ class Paquete
         private string $contenidoFragil,
         private string $codigoRastreo,
         private string $estado, // ✅ Incluido correctamente
+        private int $idUser,
         private DateTime $fechaRegistro = new DateTime()
     ) {
         $this->validarContenidoFragil($contenidoFragil);
@@ -38,6 +39,11 @@ class Paquete
     }
 
     // ✅ Getters
+
+    public function getIdUser(): int {
+    return $this->idUser;
+    }
+
 
     public function getId(): ?int { return $this->id; }
 

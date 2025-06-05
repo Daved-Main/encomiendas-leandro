@@ -65,7 +65,8 @@ public function execute(): RegistrarPaquete
         contenidoFragil: $datos['contenido_fragil'],
         codigoRastreo: $codigoRastreo,
         estado: $datos['estado'],
-        fechaRegistro: new \DateTime()
+        fechaRegistro: new \DateTime(),
+        idUser: $_SESSION['user']['id_user']
     );
 
     $resultado = $this->repository->guardar($paquete);

@@ -7,65 +7,125 @@ use app\domain\usecases\ListarPaquetes;
 use app\infrastructure\database\DatabaseConnect;
 use app\infrastructure\database\PaqueteRepositoryPgsql;
 use app\infrastructure\database\ViajeProximoRepositoryPg;
+use DateTime;
+use IntlDateFormatter;
+use PDO;
+use TCPDF;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+
 
 class PaqueteController
 {
     // ✅ 1. Mostrar formulario con ID del último viaje
-public function mostrarFormulario()
-{
-    $pdo = DatabaseConnect::getInstance();
-    $viajeRepo = new ViajeProximoRepositoryPg($pdo);
+    public function mostrarFormulario()
+    {
+        $pdo = DatabaseConnect::getInstance();
+        $viajeRepo = new ViajeProximoRepositoryPg($pdo);
 
-    $viaje = $viajeRepo->obtenerUltimoViajeActual();
+        $viaje = $viajeRepo->obtenerUltimoViajeActual();
 
-    if (!$viaje) {
-        die("❌ No se encontró ningún viaje registrado.");
+        if (!$viaje) {
+            die("❌ No se encontró ningún viaje registrado.");
+        }
+
+        $idViajeActual = $viaje['id_viaje_actual'];
+        $idViajeMes = $viaje['id_viaje_mes'];
+        $fechaSalida = new \DateTime($viaje['fecha_salida_actual']);
+        $mes = (int)$fechaSalida->format('m');
+        $anio = (int)$fechaSalida->format('Y');
+
+        $stmt = $pdo->prepare("
+            SELECT COUNT(*) 
+            FROM viajeactual 
+            WHERE id_viaje_mes = :id_viaje_mes
+              AND EXTRACT(MONTH FROM fecha_salida_actual) = :mes
+              AND EXTRACT(YEAR FROM fecha_salida_actual) = :anio
+        ");
+
+        $stmt->execute([
+            ':id_viaje_mes' => $idViajeMes,
+            ':mes' => $mes,
+            ':anio' => $anio
+        ]);
+
+        $numeroViaje = $stmt->fetchColumn();
+
+        $fechaSalida = new DateTime();
+        $fmt = new IntlDateFormatter(
+            'es_ES',
+            IntlDateFormatter::FULL,
+            IntlDateFormatter::NONE,
+            'America/El_Salvador',
+            IntlDateFormatter::GREGORIAN,
+            'LLLL'
+        );
+
+        $nombreMes = $fmt->format($fechaSalida);
+
+        extract([
+            'idViajeActual' => $idViajeActual,
+            'idViajeMes' => $idViajeMes,
+            'mes' => $mes,
+            'anio' => $anio,
+            'numeroViaje' => $numeroViaje,
+            'nombreMes' => $nombreMes,
+        ]);
+
+        require_once __DIR__ . '/../views/agendaPaquete.php';
     }
 
-    $idViajeActual = $viaje['id_viaje_actual'];
-    $idViajeMes = $viaje['id_viaje_mes'];
-    $fechaSalida = new \DateTime($viaje['fecha_salida_actual']);
-    $mes = (int)$fechaSalida->format('m');
-    $anio = (int)$fechaSalida->format('Y');
-
-    // ✅ Extraer las variables para que la vista pueda usarlas
-    extract([
-        'idViajeActual' => $idViajeActual,
-        'idViajeMes' => $idViajeMes,
-        'mes' => $mes,
-        'anio' => $anio,
-    ]);
-
-    require_once __DIR__ . '/../views/agendaPaquete.php';
-}
-
-
-
-
     // ✅ 2. Registrar un nuevo paquete
-    public function registrar()
-    {
+public function registrar()
+{
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
 
-    $errors = [];
+    if (!isset($_SESSION['user']['id_user'])) {
+        header("Location: index.php?route=login");
+        exit;
+    }
 
+    $_POST['id_user'] = $_SESSION['user']['id_user'];
     $_POST['contenido_fragil'] = isset($_POST['contenido_fragil']) ? 'Sí' : 'No';
 
-    // Validar campos obligatorios
+    $errors = [];
+
     $campos = [
-        'id_viaje_mes', 'mes', 'anio', // ← AÑADIDOS
+        'id_viaje_mes', 'mes', 'anio',
         'tipo_paquete', 'nombre_remitente', 'telefono_remitente',
         'nombre_destinatario', 'telefono_destinatario', 'ciudad_destino',
         'direccion_destino', 'nombre_del_articulo', 'cantidad_bultos',
-        'peso', 'alto', 'ancho', 'contenido_fragil'
+        'peso', 'alto', 'ancho', 'contenido_fragil', 'id_user'
     ];
 
     foreach ($campos as $campo) {
         if (empty(trim($_POST[$campo] ?? ''))) {
             $errors[] = "El campo '$campo' es obligatorio.";
         }
+    }
+
+    // 💥 Verificar duplicado
+    $pdo = DatabaseConnect::getInstance();
+    $checkStmt = $pdo->prepare("
+        SELECT COUNT(*) FROM paquete
+        WHERE nombre_remitente = :remitente
+        AND nombre_destinatario = :destinatario
+        AND nombre_del_articulo = :articulo
+        AND ciudad_destino = :ciudad
+        AND fecha_registro::date = CURRENT_DATE
+    ");
+
+    $checkStmt->execute([
+        ':remitente' => $_POST['nombre_remitente'],
+        ':destinatario' => $_POST['nombre_destinatario'],
+        ':articulo' => $_POST['nombre_del_articulo'],
+        ':ciudad' => $_POST['ciudad_destino'],
+    ]);
+
+    if ($checkStmt->fetchColumn() > 0) {
+        $errors[] = "Ya existe un paquete similar registrado hoy.";
     }
 
     if (!empty($errors)) {
@@ -78,7 +138,6 @@ public function mostrarFormulario()
     }
 
     try {
-        $pdo = DatabaseConnect::getInstance();
         $repo = new PaqueteRepositoryPgsql($pdo);
         $useCase = new RegistrarPaquete($repo);
 
@@ -105,7 +164,7 @@ public function mostrarFormulario()
     }
 }
 
-    // ✅ 3. Generador simple de código de rastreo
+
     private function generarCodigoRastreo(array $data): string
     {
         $viaje = str_pad((string)$data['id_viaje_actual'], 2, '0', STR_PAD_LEFT);
@@ -114,7 +173,6 @@ public function mostrarFormulario()
         return $viaje . $mes . $random;
     }
 
-    // ✅ 4. Listar paquetes
     public function listar()
     {
         if (session_status() === PHP_SESSION_NONE) {
@@ -129,6 +187,19 @@ public function mostrarFormulario()
             $useCase->execute();
             $paquetes = $useCase->getResponse()->getData();
 
+        $fecha = $_GET['fecha'] ?? null;
+
+        if ($fecha) {
+            $stmt = $pdo->prepare("SELECT * FROM paquete WHERE fecha_registro::date = :fecha ORDER BY fecha_registro DESC");
+            $stmt->execute([':fecha' => $fecha]);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $paquetes = array_map(fn($r) => $repo->hidratarPaquete($r), $rows);
+        } else {
+            $useCase = new ListarPaquetes($repo);
+            $useCase->execute();
+            $paquetes = $useCase->getResponse()->getData();
+        }
+
             require_once __DIR__ . '/../views/paquetes-recibidos.php';
         } catch (\Throwable $e) {
             echo "<h3>Error al listar paquetes</h3>";
@@ -136,7 +207,6 @@ public function mostrarFormulario()
         }
     }
 
-    // ✅ 5. Actualizar estado individual
     public function actualizarEstado()
     {
         if (session_status() === PHP_SESSION_NONE) {
@@ -169,7 +239,6 @@ public function mostrarFormulario()
         exit;
     }
 
-    // ✅ 6. Actualizar estado masivo
     public function actualizarEstadoMasivo()
     {
         $repo = new PaqueteRepositoryPgsql(DatabaseConnect::getInstance());
@@ -177,4 +246,75 @@ public function mostrarFormulario()
         header("Location: index.php?route=paquetes-recibidos");
         exit;
     }
+
+    public function historialUsuario()
+    {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        $idUser = $_SESSION['user']['id_user'] ?? null;
+
+        if (!$idUser) {
+            header('Location: index.php?route=login');
+            exit;
+        }
+
+        $pdo = DatabaseConnect::getInstance();
+        $stmt = $pdo->prepare("SELECT * FROM paquete WHERE id_user = :id ORDER BY fecha_registro DESC");
+        $stmt->execute([':id' => $idUser]);
+
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $paquetes = array_map(fn($r) => (new PaqueteRepositoryPgsql($pdo))->hidratarPaquete($r), $rows);
+
+        require_once __DIR__ . '/../views/historialPaquetes.php';
+    }
+
+    public function generarVineta()
+{
+    $codigo = $_POST['codigo_rastreo'] ?? null;
+
+    if (!$codigo) {
+        die("Código de rastreo no proporcionado.");
+    }
+
+    $repo = new PaqueteRepositoryPgsql(DatabaseConnect::getInstance());
+    $paquete = $repo->obtenerPorCodigoRastreo($codigo);
+
+    if (!$paquete) {
+        die("Paquete no encontrado.");
+    }
+
+    // Generar QR
+    $qr = new QrCode($codigo);
+    $writer = new PngWriter();
+    $qrPath = sys_get_temp_dir() . "/{$codigo}.png";
+    $writer->write($qr)->saveToFile($qrPath);
+
+    // Crear PDF con TCPDF
+    $pdf = new TCPDF();
+    $pdf->SetCreator(PDF_CREATOR);
+    $pdf->SetAuthor('Encomiendas Leandro');
+    $pdf->SetTitle("Etiqueta - $codigo");
+    $pdf->SetMargins(15, 20, 15);
+    $pdf->AddPage();
+
+    // Título
+    $pdf->SetFont('helvetica', 'B', 16);
+    $pdf->Cell(0, 10, "Etiqueta de Envío", 0, 1, 'C');
+    $pdf->Ln(5);
+
+    // Datos del paquete
+    $pdf->SetFont('helvetica', '', 12);
+    $pdf->Cell(0, 8, "Código de Rastreo: $codigo", 0, 1);
+    $pdf->Cell(0, 8, "Remitente: " . $paquete->getNombreRemitente(), 0, 1);
+    $pdf->Cell(0, 8, "Destinatario: " . $paquete->getNombreDestinatario(), 0, 1);
+    $pdf->Cell(0, 8, "Artículo: " . $paquete->getNombreDelArticulo(), 0, 1);
+    $pdf->Cell(0, 8, "Ciudad destino: " . $paquete->getCiudadDestino(), 0, 1);
+    $pdf->Ln(5);
+
+    // Insertar QR
+    $pdf->Image($qrPath, $pdf->GetX(), $pdf->GetY(), 40, 40);
+    unlink($qrPath); // Limpieza del archivo temporal
+
+    $pdf->Output("vineta_{$codigo}.pdf", 'I');
+}
+
 }

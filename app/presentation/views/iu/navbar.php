@@ -11,9 +11,9 @@ $isAdmin      = $isLoggedIn && ($_SESSION['role'] === 'admin');
 $isEmpleado   = $isLoggedIn && ($_SESSION['role'] === 'empleado');
 $isUsuario    = $isLoggedIn && ($_SESSION['role'] === 'usuario');
 
-$nombreUsuario  = $isUsuario  ? $_SESSION['user'] : '';
-$nombreEmpleado = $isEmpleado ? ($_SESSION['empleado_nombre'] ?? $_SESSION['user']) : '';
-$nombreAdmin    = $isAdmin    ? $_SESSION['user'] : '';
+$nombreUsuario  = $isUsuario  ? ($_SESSION['user']['nombre'] ?? '') : '';
+$nombreEmpleado = $isEmpleado ? ($_SESSION['empleado_nombre'] ?? ($_SESSION['user']['nombre'] ?? '')) : '';
+$nombreAdmin    = $isAdmin    ? ($_SESSION['user']['nombre'] ?? '') : '';
 ?>
 <nav class="sticky top-0 z-50 bg-blue-500 text-white shadow-md">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -84,7 +84,7 @@ $nombreAdmin    = $isAdmin    ? $_SESSION['user'] : '';
               <!-- Opciones de Admin -->
               <li><a href="index.php?route=listar_paquetes" class="block px-4 py-2 hover:bg-gray-100">Paquetes Recibidos</a></li>
               <li><a href="index.php?route=estadoPaquetes"      class="block px-4 py-2 hover:bg-gray-100">Estado de Paquetes</a></li>
-              <li><a href="index.php?route=generarCobros"       class="block px-4 py-2 hover:bg-gray-100">Generar Cobros</a></li>
+              <li><a href="index.php?route=historialPaquetes"     class="block px-4 py-2 hover:bg-gray-100">Ver Paquetes</a></li>
               <li><a href="index.php?route=pagosRecibidos"      class="block px-4 py-2 hover:bg-gray-100">Pagos Recibidos</a></li>
               <li><a href="index.php?route=generarReportes"     class="block px-4 py-2 hover:bg-gray-100">Generar Reportes</a></li>
               <li class="border-t my-1"></li>
@@ -138,7 +138,7 @@ $nombreAdmin    = $isAdmin    ? $_SESSION['user'] : '';
               </svg>
             </button>
             <ul id="user-menu" class="absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg hidden">
-              <li><a href="index.php?route=verPaquetes"     class="block px-4 py-2 hover:bg-gray-100">Ver Paquetes</a></li>
+              <li><a href="index.php?route=historialPaquetes"     class="block px-4 py-2 hover:bg-gray-100">Ver Paquetes</a></li>
               <li><a href="index.php?route=historialEnvios" class="block px-4 py-2 hover:bg-gray-100">Historial de Envíos</a></li>
               <li><a href="index.php?route=proximosViajes"  class="block px-4 py-2 hover:bg-gray-100">Próximos Viajes</a></li>
               <li class="border-t my-1"></li>
@@ -191,7 +191,7 @@ $nombreAdmin    = $isAdmin    ? $_SESSION['user'] : '';
     <?php elseif ($isAdmin): ?>
       <a href="index.php?route=listar_paquetes" class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Paquetes Recibidos</a>
       <a href="index.php?route=estadoPaquetes"      class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Estado de Paquetes</a>
-      <a href="index.php?route=generarCobros"       class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Generar Cobros</a>
+      <a href="index.php?route=historialPaquetes" class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Ver Paquetes</a>
       <a href="index.php?route=pagosRecibidos"      class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Pagos Recibidos</a>
       <a href="index.php?route=generarReportes"     class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Generar Reportes</a>
       <hr class="border-blue-500">
@@ -212,7 +212,7 @@ $nombreAdmin    = $isAdmin    ? $_SESSION['user'] : '';
       <a href="index.php?route=empleado/logout" class="block px-3 py-2 bg-red-500 hover:bg-red-600 rounded-md text-center transition">Cerrar Sesión</a>
 
     <?php elseif ($isUsuario): ?>
-      <a href="index.php?route=verPaquetes" class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Ver Paquetes</a>
+      <a href="index.php?route=historialPaquetes" class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Ver Paquetes</a>
       <a href="index.php?route=historialEnvios" class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Historial Envíos</a>
       <a href="index.php?route=proximosViajes" class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Próximos Viajes</a>
       <a href="index.php?route=logout"          class="block px-3 py-2 bg-red-500 hover:bg-red-600 rounded-md text-center transition">Cerrar Sesión</a>

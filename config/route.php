@@ -353,6 +353,23 @@
         $paquete->actualizarEstadoMasivo();
         break;
 
+    case 'enviarPaquete':
+        $paquete->mostrarFormulario(); // <-- LLAMAMOS AL MÉTODO CORRECTO
+    break;
+
+
+    case 'historialPaquetes':
+    if (empty($_SESSION['user'])) {
+    header('Location: index.php?route=login');
+    exit;
+    } else {
+        $paquete->historialUsuario();
+    }        
+    break;
+
+    case 'generar_vineta':
+        $paquete->generarVineta();
+        break;
 
         default:
             echo "Ruta no encontrada";

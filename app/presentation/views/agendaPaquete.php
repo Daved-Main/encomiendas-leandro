@@ -29,6 +29,11 @@
         <input type="hidden" name="mes" value="<?= $mes ?>">
         <input type="hidden" name="anio" value="<?= $anio ?>">
 
+        <span class="font-semibold text-2xl">        
+          Viaje #<?= $numeroViaje ?> de <?= ucfirst($nombreMes) ?>
+        </span><br><br>
+
+
         <span class="font-semibold text-2xl">Información del Remitente</span>
         <div class="mt-5">
           <label class="text-black text-sm">Nombre Completo</label>
@@ -49,8 +54,19 @@
 
         <span class="font-semibold text-2xl">Lugar de Destino</span>
         <div class="mt-5">
-          <label class="text-black text-sm">Ciudad de Destino</label>
-          <input type="text" name="ciudad_destino" class="w-full p-2 border mb-3 rounded-lg border-gray-500/50 bg-gray-400/10" required>
+        <label class="text-black text-sm">Ciudad de Destino</label>
+        <select name="ciudad_destino" class="w-full p-2 border mb-3 rounded-lg border-gray-500/50 bg-gray-400/10" required>
+          <optgroup label="Estados Unidos">
+            <option value="Louisiana">Louisiana</option>
+          </optgroup>
+          <optgroup label="El Salvador">
+            <option value="Santa Elena">Santa Elena</option>
+            <option value="Ilopango">Ilopango</option>
+            <option value="Soyapango">Soyapango</option>
+            <option value="San Salvador">San Salvador</option>
+            <option value="Sonsonate">Sonsonate</option>
+          </optgroup>
+        </select>
 
           <label class="text-black text-sm">Dirección</label>
           <input type="text" name="direccion_destino" class="w-full p-2 border mb-3 rounded-lg border-gray-500/50 bg-gray-400/10" required>
@@ -116,7 +132,59 @@
 
   <?php include __DIR__ . '/iu/footer.php'; ?>
 
-    <script src="/app/presentation/views/iu/agenda.js" defer></script>
+  <script src="/app/presentation/views/iu/agenda.js" defer></script>
+
+  <?php if (!empty($_SESSION['errors'])): ?>
+  <div id="flashOverlay"
+       class="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white bg-opacity-80 backdrop-blur-sm rounded-xl shadow-lg w-80 mx-4">
+      <div class="px-6 py-4 border-b <?= $_SESSION['errors']['type']=='error' 
+                                          ? 'border-red-400' 
+                                          : 'border-green-400' ?>">
+        <h2 class="text-lg font-semibold text-gray-800">
+          <?= $_SESSION['errors']['type']=='error' ? '¡Error!' : '¡Éxito!' ?>
+        </h2>
+      </div>
+      <div class="px-6 py-4">
+        <ul class="list-disc list-inside space-y-1 text-gray-700">
+          <?php foreach ($_SESSION['errors']['messages'] ?? [] as $msg): ?>
+            <li><?= htmlspecialchars($msg) ?></li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+      <div class="px-6 py-4 flex justify-end space-x-2 border-t">
+        <?php if ($_SESSION['errors']['type'] == 'success'): ?>
+          <a href="index.php?route=home"
+             class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition">
+            Inicio
+          </a>
+        <?php endif; ?>
+        <button id="flashClose"
+                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.getElementById('flashClose').addEventListener('click', () => {
+      document.getElementById('flashOverlay').remove();
+    });
+    document.getElementById('flashOverlay').addEventListener('click', e => {
+      if (e.target.id === 'flashOverlay') {
+        e.currentTarget.remove();
+      }
+    });
+
+    // Auto cerrar después de 3s
+    setTimeout(() => {
+      const modal = document.getElementById('flashOverlay');
+      if (modal) modal.remove();
+    }, 3000);
+  </script>
+  <?php unset($_SESSION['errors']); ?>
+<?php endif; ?>
+
 
 </body>
 </html>

@@ -8,8 +8,7 @@ use app\domain\entities\BaseResponse;
 
 abstract class BaseCase{
 
-    private mixed $data;
-
+    private mixed $data = null;
     private mixed $attributes;
 
     protected function setData(mixed $data): void {

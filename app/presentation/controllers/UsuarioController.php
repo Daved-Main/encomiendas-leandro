@@ -228,7 +228,10 @@ class UsuarioController
 
         $usuario = $this->servicio->auth($correo, $password);
         if ($usuario) {
-            $_SESSION['user'] = $usuario->getName();
+            $_SESSION['user'] = [
+                'id_user' => $usuario->getId(),     
+                'nombre'  => $usuario->getName()            
+            ];            
             $_SESSION['role'] = $usuario->getRol();
             $_SESSION['success'] = [
                 'type'     => 'success',
