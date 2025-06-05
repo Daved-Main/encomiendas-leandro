@@ -8,31 +8,30 @@
   <link rel="stylesheet" href="/app/presentation/views/iu/style.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-white text-gray-800">
   <?php include __DIR__ . '/iu/navbar.php'; ?>
 
-  <div class="h-100 w-full content-center text-center bg-gradient-to-r from-[#1E90FF] via-[#B3DAFF] to-[#A680FF]">
-    <h2 class="text-white font-bold" id="Slogan">
+  <div class="w-full text-center bg-gradient-to-r from-[#1E90FF] via-[#B3DAFF] to-[#A680FF] py-6">
+    <h2 class="text-white font-bold text-xl md:text-2xl" id="Slogan">
       Movemos tus encomiendas <br> con precisión y confianza.
     </h2>
   </div>
 
-  <div class="flex content-center place-self-center">
-    <h1 class="mt-15 font-bold text-5xl">Agendar Encomienda</h1>
+  <div class="text-center mt-10">
+    <h1 class="font-bold text-3xl md:text-5xl">Agendar Encomienda</h1>
   </div>
 
-  <div class="grid grid-cols-2 gap-48 px-8 mt-8 mb-10">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 px-4 md:px-8 mt-10 mb-16">
     <!-- Formulario -->
-    <div class="w-100 place-self-end mt-15">
+    <div class="w-full max-w-2xl mx-auto">
       <form action="index.php?route=paquete_registrar" method="POST">
         <input type="hidden" name="id_viaje_mes" value="<?= $idViajeMes ?>">
         <input type="hidden" name="mes" value="<?= $mes ?>">
         <input type="hidden" name="anio" value="<?= $anio ?>">
 
-        <span class="font-semibold text-2xl">        
+        <span class="font-semibold text-2xl">
           Viaje #<?= $numeroViaje ?> de <?= ucfirst($nombreMes) ?>
         </span><br><br>
-
 
         <span class="font-semibold text-2xl">Información del Remitente</span>
         <div class="mt-5">
@@ -54,19 +53,19 @@
 
         <span class="font-semibold text-2xl">Lugar de Destino</span>
         <div class="mt-5">
-        <label class="text-black text-sm">Ciudad de Destino</label>
-        <select name="ciudad_destino" class="w-full p-2 border mb-3 rounded-lg border-gray-500/50 bg-gray-400/10" required>
-          <optgroup label="Estados Unidos">
-            <option value="Louisiana">Louisiana</option>
-          </optgroup>
-          <optgroup label="El Salvador">
-            <option value="Santa Elena">Santa Elena</option>
-            <option value="Ilopango">Ilopango</option>
-            <option value="Soyapango">Soyapango</option>
-            <option value="San Salvador">San Salvador</option>
-            <option value="Sonsonate">Sonsonate</option>
-          </optgroup>
-        </select>
+          <label class="text-black text-sm">Ciudad de Destino</label>
+          <select name="ciudad_destino" class="w-full p-2 border mb-3 rounded-lg border-gray-500/50 bg-gray-400/10" required>
+            <optgroup label="Estados Unidos">
+              <option value="Louisiana">Louisiana</option>
+            </optgroup>
+            <optgroup label="El Salvador">
+              <option value="Santa Elena">Santa Elena</option>
+              <option value="Ilopango">Ilopango</option>
+              <option value="Soyapango">Soyapango</option>
+              <option value="San Salvador">San Salvador</option>
+              <option value="Sonsonate">Sonsonate</option>
+            </optgroup>
+          </select>
 
           <label class="text-black text-sm">Dirección</label>
           <input type="text" name="direccion_destino" class="w-full p-2 border mb-3 rounded-lg border-gray-500/50 bg-gray-400/10" required>
@@ -80,20 +79,20 @@
           <label class="text-black text-sm">Nombre del Artículo</label>
           <input type="text" name="nombre_del_articulo" class="w-full p-2 border mb-3 rounded-lg border-gray-500/50 bg-gray-400/10" required>
 
-          <div class="flex flex-row gap-4">
-            <div class="basis-1/3">
+          <div class="flex flex-wrap gap-4">
+            <div class="basis-full sm:basis-1/2 lg:basis-1/3">
               <label class="text-black text-sm">Bultos</label>
               <input type="number" name="cantidad_bultos" class="w-full p-2 border mb-3 rounded-lg border-gray-500/50 bg-gray-400/10" required>
             </div>
-            <div class="basis-1/3">
+            <div class="basis-full sm:basis-1/2 lg:basis-1/3">
               <label class="text-black text-sm">Peso (lb)</label>
               <input type="number" name="peso" step="0.01" class="w-full p-2 border mb-3 rounded-lg border-gray-500/50 bg-gray-400/10" required>
             </div>
-            <div class="basis-1/3">
+            <div class="basis-full sm:basis-1/2 lg:basis-1/3">
               <label class="text-black text-sm">Alto (cm)</label>
               <input type="number" name="alto" step="0.01" class="w-full p-2 border mb-3 rounded-lg border-gray-500/50 bg-gray-400/10" required>
             </div>
-            <div class="basis-1/3">
+            <div class="basis-full sm:basis-1/2 lg:basis-1/3">
               <label class="text-black text-sm">Ancho (cm)</label>
               <input type="number" name="ancho" step="0.01" class="w-full p-2 border mb-3 rounded-lg border-gray-500/50 bg-gray-400/10" required>
             </div>
@@ -112,8 +111,8 @@
     </div>
 
     <!-- Panel de resumen -->
-    <div class="mt-16 place-self-start">
-      <div class="bg-[#D6E4EF] rounded-xl shadow-2xl mx-auto w-full max-w-xs p-6">
+    <div class="w-full max-w-md mx-auto lg:mt-16">
+      <div class="bg-[#D6E4EF] rounded-xl shadow-2xl p-6">
         <h3 class="text-center text-2xl font-bold mb-4">Resumen</h3>
         <div class="space-y-4">
           <div><p class="font-semibold">Remitente</p><p id="resRemitente">–</p></div>
@@ -135,12 +134,9 @@
   <script src="/app/presentation/views/iu/agenda.js" defer></script>
 
   <?php if (!empty($_SESSION['errors'])): ?>
-  <div id="flashOverlay"
-       class="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center z-50">
+  <div id="flashOverlay" class="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-white bg-opacity-80 backdrop-blur-sm rounded-xl shadow-lg w-80 mx-4">
-      <div class="px-6 py-4 border-b <?= $_SESSION['errors']['type']=='error' 
-                                          ? 'border-red-400' 
-                                          : 'border-green-400' ?>">
+      <div class="px-6 py-4 border-b <?= $_SESSION['errors']['type']=='error' ? 'border-red-400' : 'border-green-400' ?>">
         <h2 class="text-lg font-semibold text-gray-800">
           <?= $_SESSION['errors']['type']=='error' ? '¡Error!' : '¡Éxito!' ?>
         </h2>
@@ -154,13 +150,11 @@
       </div>
       <div class="px-6 py-4 flex justify-end space-x-2 border-t">
         <?php if ($_SESSION['errors']['type'] == 'success'): ?>
-          <a href="index.php?route=home"
-             class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition">
+          <a href="index.php?route=home" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition">
             Inicio
           </a>
         <?php endif; ?>
-        <button id="flashClose"
-                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+        <button id="flashClose" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
           Cerrar
         </button>
       </div>
@@ -175,16 +169,12 @@
         e.currentTarget.remove();
       }
     });
-
-    // Auto cerrar después de 3s
     setTimeout(() => {
       const modal = document.getElementById('flashOverlay');
       if (modal) modal.remove();
     }, 3000);
   </script>
   <?php unset($_SESSION['errors']); ?>
-<?php endif; ?>
-
-
+  <?php endif; ?>
 </body>
 </html>
