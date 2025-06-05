@@ -371,6 +371,25 @@
         $paquete->generarVineta();
         break;
 
+    case 'seguimientoPaquete':
+    if (session_status() === PHP_SESSION_NONE) session_start();
+
+    $codigo = $_GET['codigo_rastreo'] ?? null;
+    $seguimiento = null;
+
+    if ($codigo) {
+        $pdo = DatabaseConnect::getInstance();
+        $stmt = $pdo->prepare("
+            SELECT sp.*, p.fecha_registro 
+            FROM seguimiento_paquete sp
+            JOIN paquete p ON sp.id_paquete = p.id_paquete
+            WHERE p.codigo_rastreo = :codigo
+            LIMIT 1
+        ");
+        $stmt->execute([':codigo' => $codigo]);
+        $seguimiento = $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
         default:
             echo "Ruta no encontrada";
         //case '' :

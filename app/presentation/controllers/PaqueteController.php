@@ -143,6 +143,17 @@ public function registrar()
 
         $useCase->setAttributes($_POST)->execute();
 
+        $idPaquete = $pdo->lastInsertId();
+
+        $stmt = $pdo->prepare("
+        INSERT INTO seguimiento_paquete (id_paquete, solicitud_registrada, estado_actual, fecha_entrega)
+        VALUES (:id_paquete, true, 'Registrado', NOW())
+        ");
+        
+        $stmt->execute([
+        ':id_paquete' => $idPaquete
+        ]);
+
         $_SESSION['errors'] = [
             'type' => 'success',
             'messages' => ['Paquete registrado correctamente ✅']
@@ -207,37 +218,63 @@ public function registrar()
         }
     }
 
-    public function actualizarEstado()
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = $_POST['id_paquete'] ?? null;
-            $estado = $_POST['estado'] ?? null;
-
-            if ($id && $estado) {
-                $pdo = DatabaseConnect::getInstance();
-                $repo = new PaqueteRepositoryPgsql($pdo);
-
-                $resultado = $repo->actualizarEstado((int)$id, $estado);
-
-                $_SESSION['errors'] = [
-                    'type' => $resultado ? 'success' : 'error',
-                    'messages' => [$resultado ? 'Estado actualizado correctamente ✅' : 'No se pudo actualizar el estado ❌']
-                ];
-            } else {
-                $_SESSION['errors'] = [
-                    'type' => 'error',
-                    'messages' => ['Faltan datos para actualizar el estado ❌']
-                ];
-            }
-        }
-
-        header("Location: index.php?route=listar_paquetes");
-        exit;
+public function actualizarEstado()
+{
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
     }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $id = $_POST['id_paquete'] ?? null;
+        $estado = $_POST['estado'] ?? null;
+
+        if ($id && $estado) {
+            $pdo = DatabaseConnect::getInstance();
+            $repo = new PaqueteRepositoryPgsql($pdo);
+
+            // Actualizar estado en tabla paquete
+            $resultado = $repo->actualizarEstado((int)$id, $estado);
+
+            // Mapear el estado al campo booleano correspondiente en seguimiento_paquete
+            $mapeoEstados = [
+                'Recibido' => 'paquete_recibido',
+                'En camino' => 'en_transito',
+                'Entregado' => 'paquete_entregado',
+                'Retenido' => null // este no marca un paso en el seguimiento
+            ];
+
+            $campoBooleano = $mapeoEstados[$estado] ?? null;
+
+            if ($campoBooleano) {
+                $stmt = $pdo->prepare("
+                    UPDATE seguimiento_paquete
+                    SET $campoBooleano = true,
+                        estado_actual = :estado,
+                        fecha_entrega = NOW()
+                    WHERE id_paquete = :id
+                ");
+                $stmt->execute([
+                    ':estado' => $estado,
+                    ':id' => $id
+                ]);
+            }
+
+            $_SESSION['errors'] = [
+                'type' => $resultado ? 'success' : 'error',
+                'messages' => [$resultado ? 'Estado actualizado correctamente ✅' : 'No se pudo actualizar el estado ❌']
+            ];
+        } else {
+            $_SESSION['errors'] = [
+                'type' => 'error',
+                'messages' => ['Faltan datos para actualizar el estado ❌']
+            ];
+        }
+    }
+
+    header("Location: index.php?route=listar_paquetes");
+    exit;
+}
+
 
     public function actualizarEstadoMasivo()
     {

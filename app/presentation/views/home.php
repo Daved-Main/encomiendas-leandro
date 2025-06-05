@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="/app/presentation/views/iu/style.css">
+    <link rel="stylesheet" href="/encomiedasLeandro/app/presentation/views/iu/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -46,6 +46,7 @@
     </div>
   </div>
 </div>
+
 
 
 
@@ -100,12 +101,62 @@
     <p class="text-gray-600 mb-6">No hay viajes programados en este momento.</p>
 <?php endif; ?>
 
-
         <!-- Botón verde de “¡Comienza ahora!” -->
     <a href="index.php?route=agendaPaquete"><button type="submit" value="¡Comienza ahora!" class="bg-[#009966] p-2 px-3 mb-10 rounded-md text-white font-semibold transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-105 hover:bg-green-800 cursor-pointer">¡Comienza ahora!</button></a>
         <p class="text-gray-600">¡Estamos ansiosos por atenderte!</p>
     </div>
     
+    <?php if (!empty($_SESSION['errors'])): ?>
+  <div id="flashOverlay"
+       class="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white bg-opacity-80 backdrop-blur-sm rounded-xl shadow-lg w-80 mx-4">
+      <div class="px-6 py-4 border-b <?= $_SESSION['errors']['type']=='error' 
+                                          ? 'border-red-400' 
+                                          : 'border-green-400' ?>">
+        <h2 class="text-lg font-semibold text-gray-800">
+          <?= $_SESSION['errors']['type']=='error' ? '¡Error!' : '¡Éxito!' ?>
+        </h2>
+      </div>
+      <div class="px-6 py-4">
+        <ul class="list-disc list-inside space-y-1 text-gray-700">
+          <?php foreach ($_SESSION['errors']['messages'] ?? [] as $msg): ?>
+            <li><?= htmlspecialchars($msg) ?></li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+      <div class="px-6 py-4 flex justify-end space-x-2 border-t">
+        <?php if ($_SESSION['errors']['type'] == 'success'): ?>
+          <a href="index.php?route=home"
+             class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition">
+            Inicio
+          </a>
+        <?php endif; ?>
+        <button id="flashClose"
+                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.getElementById('flashClose')?.addEventListener('click', () => {
+      document.getElementById('flashOverlay')?.remove();
+    });
+    document.getElementById('flashOverlay')?.addEventListener('click', e => {
+      if (e.target.id === 'flashOverlay') {
+        e.currentTarget.remove();
+      }
+    });
+
+    // Auto cerrar después de 3s
+    setTimeout(() => {
+      const modal = document.getElementById('flashOverlay');
+      if (modal) modal.remove();
+    }, 3000);
+  </script>
+  <?php unset($_SESSION['errors']); ?>
+<?php endif; ?>
+
 </body>
 <?php include __DIR__ . '/iu/footer.php'; ?>
 </html>
