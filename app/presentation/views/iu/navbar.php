@@ -182,7 +182,7 @@ $nombreAdmin    = $isAdmin    ? ($_SESSION['user']['nombre'] ?? '') : '';
     <div class="border-t border-blue-500 my-2"></div>
 
     <?php if (! $isLoggedIn): ?>
-      <a href="index.php?route=login"     class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Login Usuario</a>
+      <a href="index.php?route=login"     class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Iniciar Sessión</a>
       <a href="index.php?route=registrar" class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Registrarse</a>
 
     <?php elseif ($isAdmin): ?>

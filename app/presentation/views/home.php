@@ -11,7 +11,7 @@
 <body>
     <?php include __DIR__ . '/iu/navbar.php';?>
     <div class="h-100 w-full content-center text-center bg-gradient-to-l from-violet-400 via-cyan-300/60 to-blue-400">
-        <h1 class="text-black" id="slogan">¡Slogan!</h1>
+        <h1 class="text-black" id="slogan">¡Bienvenido a tu servicio de encomiendas favorito!</h1>
         <span class="text-black italic">Ver más información</span>
     </div>
 
