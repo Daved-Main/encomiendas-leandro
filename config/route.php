@@ -389,7 +389,13 @@
         $stmt->execute([':codigo' => $codigo]);
         $seguimiento = $stmt->fetch(PDO::FETCH_ASSOC);
     }
+        case 'politica' :
+            require_once __DIR__ . '/../app/presentation/views/PoliticasyPrivacidad.php';
+        break;
     
+        case 'terminos' :
+            require_once __DIR__ . '/../app/presentation/views/PoliticasyPrivacidad.php';
+        break;
         default:
             echo "Ruta no encontrada";
         //case '' :

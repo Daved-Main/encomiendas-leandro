@@ -33,8 +33,8 @@
 
                     <h3 class="font-semibold mb-2">Políticas:</h3>
                     <ul class="text-gray-300 space-y-1">
-                        <li><a href="#" class="hover:text-white transition">Términos y condiciones</a></li>
-                        <li><a href="#" class="hover:text-white transition">Política de privacidad</a></li>
+                        <li><a href="index.php?route=terminos" class="hover:text-white transition">Términos y condiciones</a></li>
+                        <li><a href="index.php?route=politica" class="hover:text-white transition">Política de privacidad</a></li>
                     </ul>
                 </div>
             </div>

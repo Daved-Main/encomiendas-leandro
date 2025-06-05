@@ -45,7 +45,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
             <div class="flex flex-row items-center mb-4">
               <input id="terms" name="terms" type="checkbox" required class="mr-2">
-              <label for="terms" class="text-sm text-gray-400">Acepto los términos y condiciones</label>
+              <a href="index.php?route=terminos"><label for="terms" class="text-sm text-gray-400">Acepto los términos y condiciones</label></a>
             </div>
 
 
