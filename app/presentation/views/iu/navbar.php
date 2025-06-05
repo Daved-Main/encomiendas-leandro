@@ -83,10 +83,7 @@ $nombreAdmin    = $isAdmin    ? ($_SESSION['user']['nombre'] ?? '') : '';
             <ul id="admin-menu" class="absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg hidden">
               <!-- Opciones de Admin -->
               <li><a href="index.php?route=listar_paquetes" class="block px-4 py-2 hover:bg-gray-100">Paquetes Recibidos</a></li>
-              <li><a href="index.php?route=estadoPaquetes"      class="block px-4 py-2 hover:bg-gray-100">Estado de Paquetes</a></li>
               <li><a href="index.php?route=historialPaquetes"     class="block px-4 py-2 hover:bg-gray-100">Ver Paquetes</a></li>
-              <li><a href="index.php?route=pagosRecibidos"      class="block px-4 py-2 hover:bg-gray-100">Pagos Recibidos</a></li>
-              <li><a href="index.php?route=generarReportes"     class="block px-4 py-2 hover:bg-gray-100">Generar Reportes</a></li>
               <li class="border-t my-1"></li>
               <li><a href="index.php?route=admin/listarUsuarios&estado=activos" class="block px-4 py-2 hover:bg-gray-100">Listar Usuarios</a></li>
               <li class="border-t my-1"></li>
@@ -190,10 +187,7 @@ $nombreAdmin    = $isAdmin    ? ($_SESSION['user']['nombre'] ?? '') : '';
 
     <?php elseif ($isAdmin): ?>
       <a href="index.php?route=listar_paquetes" class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Paquetes Recibidos</a>
-      <a href="index.php?route=estadoPaquetes"      class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Estado de Paquetes</a>
       <a href="index.php?route=historialPaquetes" class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Ver Paquetes</a>
-      <a href="index.php?route=pagosRecibidos"      class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Pagos Recibidos</a>
-      <a href="index.php?route=generarReportes"     class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Generar Reportes</a>
       <hr class="border-blue-500">
       <a href="index.php?route=admin/listarUsuarios&estado=activos" class="block px-3 py-2 rounded-md hover:bg-blue-700 transition">Listar Usuarios</a>
       <hr class="border-blue-500">
